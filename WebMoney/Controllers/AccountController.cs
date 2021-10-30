@@ -56,7 +56,7 @@ namespace WebMoney.Controllers
                     await _signInManager.SignInAsync(user, false);
                     var bank = new BankAccount()
                     {
-                        UniqueNumber = GetUniqueNumber(),
+                        UniqueNumber = user.UniqueСode,
                         UserId = user.Id,
                         MoneyCount = 100
                     };
