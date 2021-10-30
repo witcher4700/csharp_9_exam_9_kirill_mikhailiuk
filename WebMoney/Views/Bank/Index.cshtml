@@ -1,0 +1,121 @@
+﻿@{ ViewData["Title"] = "Home Page"; }
+@model WebMoney.ViewModels.ProfileIndexViewModel
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>text-align</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Модальный (фон) */
+        .modal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed; /* Оставаться на месте */
+            z-index: 1; /* Сидеть на вершине */
+            padding-top: 100px; /* Расположение коробки */
+            left: 0;
+            top: 0;
+            width: 100%; /* Полная ширина */
+            height: 100%; /* Полная высота */
+            overflow: auto; /* Включите прокрутку, если это необходимо */
+            background-color: rgb(0,0,0); /* Цвет запасной вариант  */
+            background-color: rgba(0,0,0,0.4); /*Черный с непрозрачностью */
+        }
+
+        /* Модальное содержание */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* Кнопка закрытия */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="myModal" class="modal">
+
+            <!-- Модальное содержание -->
+            <div class="modal-content">
+                <form method="post">
+                    <span class="close">&times;</span>
+                    <Label>Номер кошелька</Label>
+                    <input type="text" value="" id="walletNumber" required />
+                    <Label>Сумма перевода</Label>
+                    <input type="number" value="" id="moneyCount" required min="0.1" step="0.1"/>
+                    <a id="sendDataBtn" class="btn btn-primary">Сделать перевод</a>
+                </form>
+                
+
+            </div>
+
+        </div>
+        <a id="transferBtn" class="btn btn-primary">Перевести деньги на счёт</a>
+
+    </div>
+    @section scripts{
+        @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+        <script>
+            $("#sendDataBtn").on("click", function () {
+                if ($("#walletNumber").val().length == 0 || $("#moneyCount").val().length == 0) {
+                    return alert("Заполните все поля формы!")
+                }
+                $.post('@Url.Action("AnonymousTransfer", "Bank")',
+                    {
+                        walletNumber: $("#walletNumber").val(),
+                        moneyCount: $("#moneyCount").val()
+                    },
+                    function (response) {
+                        console.log(response)
+                        if (response == 200) {
+                            alert("Перевод успешно совершен")
+                        }
+                        else {alert(response) }
+                    }
+                )
+            });
+
+            var modal = document.getElementById("myModal");
+
+            var btn = document.getElementById("transferBtn");
+
+            var span = document.getElementsByClassName("close")[0];
+
+            btn.onclick = function () {
+                modal.style.display = "block";
+            }
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+    
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+
+    }
+</body>
+</html>

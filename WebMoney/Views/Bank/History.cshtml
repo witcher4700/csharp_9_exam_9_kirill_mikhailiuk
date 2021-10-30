@@ -1,0 +1,38 @@
+﻿@{ ViewData["Title"] = "Home Page"; }
+@model IQueryable<Transaction>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>text-align</title>
+</head>
+<body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">С какого кошелька</th>
+                <th scope="col">На какой кошелек</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Тип транзакции</th>
+                <th scope="col">Время</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model)
+            {
+            <tr>
+                <th scope="row">@t.Id</th>
+                <td>@t.WalletFrom</td>
+                <td>@t.WalletTo</td>
+                <td>@t.MoneyCount</td>
+                <td>@t.TransActionType</td>
+                <td>@t.DateTime</td>
+            </tr>
+            }
+
+
+        </tbody>
+    </table>
+</body>
+</html>

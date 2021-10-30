@@ -1,0 +1,130 @@
+﻿@{ ViewData["Title"] = "Home Page"; }
+@model IQueryable<ServiceCompany>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>text-align</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Модальный (фон) */
+        .modal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed; /* Оставаться на месте */
+            z-index: 1; /* Сидеть на вершине */
+            padding-top: 100px; /* Расположение коробки */
+            left: 0;
+            top: 0;
+            width: 100%; /* Полная ширина */
+            height: 100%; /* Полная высота */
+            overflow: auto; /* Включите прокрутку, если это необходимо */
+            background-color: rgb(0,0,0); /* Цвет запасной вариант  */
+            background-color: rgba(0,0,0,0.4); /*Черный с непрозрачностью */
+        }
+
+        /* Модальное содержание */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* Кнопка закрытия */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+       
+    </style>
+</head>
+<body>
+   
+    <div id="myModal" class="modal">
+
+        <!-- Модальное содержание -->
+        <div class="modal-content">
+            <form method="post">
+                <span class="close">&times;</span>
+                <Label>Сумма перевода</Label>
+                <input type="number" value="" id="moneyCount" required min="1" />
+                <input type="hidden" id="hiddenId" value="" />
+                <a id="sendDataBtn" class="btn btn-primary">Сделать оплату</a>
+            </form>
+        </div>
+    </div>
+    <table id="main" class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Название компании</th>
+                <th scope="col">Вид услуг</th>
+                <th scope="col">Оплатить</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model)
+            {
+                <tr>
+                    <th scope="row">@t.Id</th>
+                    <td>@t.Name</td>
+                    <td>@t.CompanyType</td>
+                    <td> <a id="@t.Id" class="btn btn-primary payBtn">Оплатить</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @section scripts{
+        @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+        <script>
+            $("#sendDataBtn").on("click", function () {
+                if ($("#moneyCount").val().length == 0) {
+                    return alert("Заполните все поля формы!")
+                }
+                $.post('@Url.Action("Pay", "Bank")',
+                    {
+                        id: $("#hiddenId").val(),
+                        moneyCount: $("#moneyCount").val()
+                    },
+                    function (response) {
+                        console.log(response)
+                        if (response == 200) {
+                            alert("Оплата успешно совершена")
+                        }
+                        else {alert(response) }
+                    }
+                )
+            });
+
+            $('#main').on('click', function (e) {
+                if (e.target.nodeName == "A") {
+                    console.log(e.target.id)
+                    $("#hiddenId").val(Number(e.target.id))
+                    $("#myModal").show()
+                }
+            })
+
+            var span = document.getElementsByClassName("close")[0];
+
+            span.onclick = function () {
+                $("#myModal").hide();
+            };
+
+        </script>
+    }
+</body>
+</html>
