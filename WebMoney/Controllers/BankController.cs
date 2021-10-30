@@ -142,12 +142,25 @@ namespace WebMoney.Controllers
             emailService.SendEmailCustom(user.Email, "Вы пополнили свой счёт" + transfer.MoneyCount + "$" + "На вашем счету сейчас " + myWallet.MoneyCount + "$");
             return Json("200");
         }
-        public IActionResult History()
+        public IActionResult History(string dateFrom, string dateTo)
         {
             var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             var myWallet = _context.BankAccounts.FirstOrDefault(b => b.UserId == user.Id);
-            var history = _context.Transactions.Where(h => h.WalletFrom == myWallet.UniqueNumber || h.WalletTo == myWallet.UniqueNumber);
-            return View(history);
+            var history = _context.Transactions.Where(h => h.WalletFrom == myWallet.UniqueNumber || h.WalletTo == myWallet.UniqueNumber).ToList();
+            if (!String.IsNullOrEmpty(dateFrom))
+            {
+                history = history.Where(p => p.DateTime > Convert.ToDateTime(dateFrom)).ToList();
+            }
+            if (!String.IsNullOrEmpty(dateTo))
+            {
+                history = history.Where(p => p.DateTime < Convert.ToDateTime(dateTo)).ToList();
+            }
+            
+            var historyViewModel = new HistoryViewModel()
+            {
+                Transactions = history
+            };
+            return View(historyViewModel);
         }
         [HttpPost]
         public JsonResult Pay(int id, double moneyCount)

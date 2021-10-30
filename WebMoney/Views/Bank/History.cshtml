@@ -1,5 +1,5 @@
 ﻿@{ ViewData["Title"] = "Home Page"; }
-@model IQueryable<Transaction>
+@model WebMoney.ViewModels.HistoryViewModel
 
 <html>
 <head>
@@ -7,6 +7,19 @@
     <title>text-align</title>
 </head>
 <body>
+    <form method="get">
+
+        <div class="form-inline form-group">
+            <label class="control-label">Дата создания от: </label>
+            @Html.TextBox("dateFrom", Model.DateFrom, htmlAttributes: new { @class = "form-control" })
+            <label class="control-label">Дата создания до: </label>
+            @Html.TextBox("dateTo", Model.DateTo, htmlAttributes: new { @class = "form-control", value = DateTime.Now })
+
+            <input type="submit" value="Фильтр" class="btn btn-default" />
+
+        </div>
+
+    </form>
     <table class="table">
         <thead>
             <tr>
@@ -19,16 +32,16 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var t in Model)
+            @foreach (var t in Model.Transactions)
             {
-            <tr>
-                <th scope="row">@t.Id</th>
-                <td>@t.WalletFrom</td>
-                <td>@t.WalletTo</td>
-                <td>@t.MoneyCount</td>
-                <td>@t.TransActionType</td>
-                <td>@t.DateTime</td>
-            </tr>
+                <tr>
+                    <th scope="row">@t.Id</th>
+                    <td>@t.WalletFrom</td>
+                    <td>@t.WalletTo</td>
+                    <td>@t.MoneyCount</td>
+                    <td>@t.TransActionType</td>
+                    <td>@t.DateTime</td>
+                </tr>
             }
 
 
