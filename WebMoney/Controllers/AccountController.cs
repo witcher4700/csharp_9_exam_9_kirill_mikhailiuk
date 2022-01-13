@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebMoney.Entities;
 using WebMoney.Models;
 using WebMoney.Services;
 using WebMoney.ViewModels;
@@ -15,34 +14,28 @@ namespace WebMoney.Controllers
 {
     public class AccountController : Controller
     {
-        private WebMoneyContext _context;
+        private ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly EmailService emailService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountController( UserManager<User> userManager, WebMoneyContext context, SignInManager<User> signInManager, EmailService emailService, IHttpContextAccessor httpContextAccessor)
+        public AccountController(IServiceProvider serviceProvider)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _context = context;
-            this.emailService = emailService;
-            _httpContextAccessor = httpContextAccessor;
+            _userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            _signInManager = serviceProvider.GetRequiredService<SignInManager<User>>();
+            _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            this.emailService = serviceProvider.GetRequiredService<EmailService>();
         }
 
         [HttpGet]
         public IActionResult Register()
-        {
-            return View();
-        }
+            => View();
 
         [HttpPost]
-
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-
                 User user = new User
                 {
                     Email = model.Email,
@@ -60,7 +53,7 @@ namespace WebMoney.Controllers
                         UserId = user.Id,
                         MoneyCount = 100
                     };
-                    emailService.SendEmailCustom(user.Email, "Ваш уникальный код для входа в аккаунт: "+user.UniqueСode + " Ваш номер счёта: "+bank.UniqueNumber);
+                    emailService.SendEmailCustom(user.Email, "Ваш уникальный код для входа в аккаунт: " + user.UniqueСode + " Ваш номер счёта: " + bank.UniqueNumber);
                     _context.BankAccounts.Add(bank);
                     _context.SaveChanges();
                     return RedirectToAction("Index", "Profile");
@@ -73,9 +66,7 @@ namespace WebMoney.Controllers
 
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
-        {
-            return View(new LoginViewModel { ReturnUrl = returnUrl });
-        }
+        => View(new LoginViewModel { ReturnUrl = returnUrl });
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -83,7 +74,7 @@ namespace WebMoney.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = _context.Users.FirstOrDefault(u=>u.UniqueСode == model.UniqueСode) ;
+                User user = _context.Users.FirstOrDefault(u => u.UniqueСode == model.UniqueСode);
                 Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(
                     user,
                     model.Password,
@@ -117,14 +108,14 @@ namespace WebMoney.Controllers
             string word = "";
             int num_letters = 6;
             for (int j = 1; j <= num_letters; j++)
-            {               
+            {
                 int letter_num = rand.Next(0, letters.Length - 1);
                 word += letters[letter_num];
             }
             var users = _context.Users.ToList();
             foreach (var user in users)
             {
-                if(user.UniqueСode == word)
+                if (user.UniqueСode == word)
                 {
                     return GetUniqueСode();
                 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebMoney.Models;
@@ -9,9 +10,10 @@ using WebMoney.Models;
 namespace WebMoney.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class WebMoneyContextModelSnapshot : ModelSnapshot
+    [Migration("20220113070407_ChangedEnumName")]
+    partial class ChangedEnumName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

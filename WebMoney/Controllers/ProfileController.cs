@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebMoney.Models;
 using WebMoney.ViewModels;
 
@@ -10,8 +7,8 @@ namespace WebMoney.Controllers
 {
     public class ProfileController : Controller
     {
-        private WebMoneyContext _context;
-        public ProfileController(WebMoneyContext context)
+        private ApplicationDbContext _context;
+        public ProfileController(ApplicationDbContext context)
         {
             _context = context;
         }

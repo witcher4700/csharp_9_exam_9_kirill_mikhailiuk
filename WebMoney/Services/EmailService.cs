@@ -1,6 +1,4 @@
 ﻿using MimeKit;
-using MailKit.Net.Smtp;
-using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.Logging;
 
@@ -39,6 +37,6 @@ namespace WebMoney.Services
                 logger.LogError(e.GetBaseException().Message);
             }
         }
-       
+
     }
 }

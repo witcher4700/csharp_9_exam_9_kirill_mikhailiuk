@@ -8,7 +8,7 @@ using WebMoney.Models;
 
 namespace WebMoney.Migrations
 {
-    [DbContext(typeof(WebMoneyContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20211030111725_Companies")]
     partial class Companies
     {

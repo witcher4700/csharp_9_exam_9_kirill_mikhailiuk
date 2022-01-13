@@ -1,30 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using WebMoney.Entities;
+using WebMoney.Enums;
 
 namespace WebMoney.Models
 {
 
-    public class WebMoneyContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
-        public DbSet<User> Users { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<ServiceCompany> ServiceCompanies { get; set; }
         public DbSet<CompanyUser> CompanyUsers { get; set; }
-        public WebMoneyContext(DbContextOptions<WebMoneyContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ServiceCompany>().HasData(
-            new { Id = 1, Name = "Megacom", CompanyType= CompanyType.ТелефонныйОператор },
-            new { Id = 2, Name = "Aknet", CompanyType = CompanyType.ИнтернетОператор},
-            new { Id = 3, Name = "Svet", CompanyType = CompanyType.БытовыеУслуги},
-            new { Id = 4, Name = "Gas", CompanyType = CompanyType.БытовыеУслуги},
-            new { Id = 5, Name = "O!", CompanyType = CompanyType.ТелефонныйОператор}
+            new { Id = 1, Name = "Megacom", CompanyType= CompanyType.PhoneOperator },
+            new { Id = 2, Name = "Aknet", CompanyType = CompanyType.InternetProvider},
+            new { Id = 3, Name = "Svet", CompanyType = CompanyType.DomesticServices},
+            new { Id = 4, Name = "Gas", CompanyType = CompanyType.DomesticServices},
+            new { Id = 5, Name = "O!", CompanyType = CompanyType.PhoneOperator}
             );
             modelBuilder.Entity<BankAccount>().HasData(
             new { Id = 2, UniqueNumber = "MEGACOM11111", UserId = "1",MoneyCount = 0.0 },

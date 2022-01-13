@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebMoney.Services;
+using WebMoney.Entities;
 
 namespace WebMoney
 {
@@ -32,7 +33,7 @@ namespace WebMoney
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<WebMoneyContext>(options => options.UseNpgsql(connection))
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection))
 
                .AddIdentity<User, IdentityRole>(options =>
                {
@@ -43,7 +44,7 @@ namespace WebMoney
                    options.Password.RequireDigit = false; // требуются ли цифры
                })
 
-               .AddEntityFrameworkStores<WebMoneyContext>();
+               .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

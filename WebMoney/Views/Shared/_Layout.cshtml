@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebMoney</title>
+    <script src="https://kit.fontawesome.com/1f84b24a08.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -11,9 +12,18 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Profile" asp-action="Index"><span style="font-size: 36px;"> <i class="far fa-money-bill-alt"></i> </span> </a>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Bank" asp-action="Index"><span style="font-size: 36px;"> <i class="far fa-money-bill-alt"></i> </span> </a>
+                }
                 <div class="login_group d-flex row ml-auto">
                     @if (User.Identity.IsAuthenticated)
                     {
+
                         <p class="mt-2">
                             <a class="mx-2 btn mb-0 btn-primary" asp-action="Index" asp-controller="Profile" asp-route-name="@User.Identity.Name">Кабинет</a>
                         </p>
@@ -27,6 +37,7 @@
                     }
                     else
                     {
+
                         <a class="mx-2 btn btn-primary" asp-controller="Account" asp-action="Login">Вход</a>
                         <a class="mx-2 btn btn-primary" asp-controller="Account" asp-action="Register">Регистрация</a>
                     }

@@ -1,5 +1,3 @@
-using System;
-
 namespace WebMoney.Models
 {
     public class ErrorViewModel

@@ -10,22 +10,20 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        /* Модальный (фон) */
         .modal {
-            display: none; /* Скрыто по умолчанию */
-            position: fixed; /* Оставаться на месте */
-            z-index: 1; /* Сидеть на вершине */
-            padding-top: 100px; /* Расположение коробки */
+            display: none; 
+            position: fixed;
+            z-index: 1; 
+            padding-top: 100px; 
             left: 0;
             top: 0;
-            width: 100%; /* Полная ширина */
-            height: 100%; /* Полная высота */
-            overflow: auto; /* Включите прокрутку, если это необходимо */
-            background-color: rgb(0,0,0); /* Цвет запасной вариант  */
-            background-color: rgba(0,0,0,0.4); /*Черный с непрозрачностью */
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4);
         }
 
-        /* Модальное содержание */
         .modal-content {
             background-color: #fefefe;
             margin: auto;
@@ -34,19 +32,20 @@
             width: 80%;
         }
 
-        /* Кнопка закрытия */
         .close {
             color: #aaaaaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
+
         .getClose {
             color: #aaaaaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
+
         .earnClose {
             color: #aaaaaa;
             float: right;
@@ -56,16 +55,18 @@
 
         .close:hover,
         .close:focus {
-             color: #000;
-             text-decoration: none;
-             cursor: pointer;
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
         }
+
         .earnClose:hover,
         .earnClose:focus {
             color: #000;
             text-decoration: none;
             cursor: pointer;
         }
+
         .getClose:hover,
         .getClose:focus {
             color: #000;
@@ -77,7 +78,6 @@
 <body>
     <div id="myModal" class="modal">
 
-        <!-- Модальное содержание -->
         <div class="modal-content">
             <form method="post">
                 <span class="close">&times;</span>
@@ -107,7 +107,7 @@
         <div class="modal-content">
             <form method="post">
                 <span id="closeEarnMoney" class="earnClose">&times;</span>
-                <Label>Сумма для снятия</Label>
+                <Label>Сумма для пополнения</Label>
                 <input type="number" value="" id="earnMoneyCount" required min="1" />
                 <a id="earnMoneyDataBtn" class="btn btn-primary">Пополнить счёт</a>
             </form>
@@ -128,114 +128,114 @@
                     <a id="getMoneyBtn" class="btn btn-primary">Снять</a>
                     <a id="transferBtn" class="btn btn-primary">Перевести</a>
                 </p>
-                <a  asp-controller="Bank" asp-action="History" class="btn btn-primary">Посмотреть историю транзакций</a>
+                <a asp-controller="Bank" asp-action="History" class="btn btn-primary">Посмотреть историю транзакций</a>
             </div>
         </div>
     </div>
     @section scripts{
         @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script>
 
-<script>
-             $("#sendDataBtn").on("click", function () {
-                if ($("#walletNumber").val().length == 0 || $("#moneyCount").val().length == 0) {
-                    return alert("Заполните все поля формы!")
-                }
-                $.post('@Url.Action("DefaultTransfer", "Bank")',
-                    {
-                        walletNumber: $("#walletNumber").val(),
-                        moneyCount: $("#moneyCount").val()
-                    },
-                    function (response) {
-                        console.log(response)
-                        if (response == 200) {
-                            alert("Перевод успешно совершен")
-                            $("#myMoney").text(Number($("#myMoney").text()) - Number($("#moneyCount").val()))
-                        }
-                        else {alert(response) }
-                    }
-                )
-            });
-            $("#getMoneyDataBtn").on("click", function () {
-                 if ($("#getMoneyCount").val().length == 0) {
-                    return alert("Заполните все поля формы!")
-                }
-                $.post('@Url.Action("GetMoney", "Bank")',
-                    {
-                        moneyCount: $("#getMoneyCount").val()
-                    },
-                    function (response) {
-                        console.log(response)
-                        if (response == 200) {
-                            alert("Вы успешно сняли деньги со счёта!")
-                            $("#myMoney").text(Number($("#myMoney").text()) - Number($("#getMoneyCount").val()))
-                        }
-                        else {alert(response) }
-                    }
-                )
-            });
-            $("#earnMoneyDataBtn").on("click", function () {
-                if ($("#earnMoneyCount").val().length == 0) {
-                    return alert("Заполните все поля формы!")
-                }
-                $.post('@Url.Action("AddMoney", "Bank")',
-                    {
-                        moneyCount: $("#earnMoneyCount").val()
-                    },
-                    function (response) {
-                        console.log(response)
-                        if (response == 200) {
-                            alert("Баланс успешно пополнен")
-                            $("#myMoney").text(Number($("#myMoney").text()) + Number($("#earnMoneyCount").val()))
-                        }
-                        else {alert(response) }
-                    }
-                )
-            });
-            var modal = document.getElementById("myModal");
-            var getMoneyModal = document.getElementById("myModalGetMoney");
-            var earnMoneyModal = document.getElementById("earnMoneyModal");
+        $("#sendDataBtn").on("click", function () {
+        if ($("#walletNumber").val().length == 0 || $("#moneyCount").val().length == 0) {
+            return swal("Ошибка!", "Заполните все поля формы", "error");
+        }
+        $.post('@Url.Action("DefaultTransfer", "Bank")',
+        {
+        walletNumber: $("#walletNumber").val(),
+        moneyCount: $("#moneyCount").val()
+        },
+        function (response) {
+        console.log(response)
+        if (response == 200) {
+            swal("Успех!", "Перевод успешно совершен!", "success");
+        $("#myMoney").text(Number($("#myMoney").text()) - Number($("#moneyCount").val()))
+        }
+        else { swal("Ошибка!", response, "error") }
+        }
+        )
+        });
+        $("#getMoneyDataBtn").on("click", function () {
+        if ($("#getMoneyCount").val().length == 0) {
+            return swal("Ошибка!", "Заполните все поля формы", "error");
+        }
+        $.post('@Url.Action("GetMoney", "Bank")',
+        {
+        moneyCount: $("#getMoneyCount").val()
+        },
+        function (response) {
+        if (response == 200) {
+            swal("Успех!", "Вы успешно сняли деньги со счёта!", "success");
+        $("#myMoney").text(Number($("#myMoney").text()) - Number($("#getMoneyCount").val()))
+        }
+        else { swal("Ошибка!", response, "error") }
+        }
+        )
+        });
+        $("#earnMoneyDataBtn").on("click", function () {
+        if ($("#earnMoneyCount").val().length == 0) {
+            return swal("Ошибка!", "Заполните все поля формы", "error");
+        }
+        $.post('@Url.Action("AddMoney", "Bank")',
+        {
+        moneyCount: $("#earnMoneyCount").val()
+        },
+        function (response) {
+        if (response == 200) {
+            swal("Успех!", "Баланс успешно пополнен!", "success");
+        $("#myMoney").text(Number($("#myMoney").text()) + Number($("#earnMoneyCount").val()))
+        }
+        else { swal("Ошибка!", response, "error") }
+        }
+        )
+        });
+        var modal = document.getElementById("myModal");
+        var getMoneyModal = document.getElementById("myModalGetMoney");
+        var earnMoneyModal = document.getElementById("earnMoneyModal");
 
-            var btn = document.getElementById("transferBtn");
+        var btn = document.getElementById("transferBtn");
 
-            var span = document.getElementsByClassName("close")[0];
-            var closeGetMoney = $("#closeGetMoney")
-            var closeEarnMoney = $("#closeEarnMoney")
+        var span = document.getElementsByClassName("close")[0];
+        var closeGetMoney = $("#closeGetMoney")
+        var closeEarnMoney = $("#closeEarnMoney")
 
-            $("#getMoneyBtn").on('click', function () {
-                getMoneyModal.style.display = "block";
-            });
-            $("#earnMoneyBtn").on('click', function () {
-                earnMoneyModal.style.display = "block";
-            });
+        $("#getMoneyBtn").on('click', function () {
+        getMoneyModal.style.display = "block";
+        });
+        $("#earnMoneyBtn").on('click', function () {
+        earnMoneyModal.style.display = "block";
+        });
 
-            btn.onclick = function () {
-                modal.style.display = "block";
-             };
+        btn.onclick = function () {
+        modal.style.display = "block";
+        };
 
-            span.onclick = function () {
-                modal.style.display = "none";
-             };
-            
-            closeGetMoney.onclick = function () {
-                 getMoneyModal.style.display = "none";
-            };
-            closeEarnMoney.onclick = function () {
-                 earnMoneyModal.style.display = "none";
-            };
+        span.onclick = function () {
+        modal.style.display = "none";
+        };
 
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
+        closeGetMoney.onclick = function () {
+        getMoneyModal.style.display = "none";
+        };
+        closeEarnMoney.onclick = function () {
+        earnMoneyModal.style.display = "none";
+        };
 
-                }
-                else if (event.target == getMoneyModal) {
-                    getMoneyModal.style.display = "none";
-                }
-                else if (event.target == earnMoneyModal) {
-                    earnMoneyModal.style.display = "none";
-                }
-            }
-</script>
+        window.onclick = function (event) {
+        if (event.target == modal) {
+        modal.style.display = "none";
+
+        }
+        else if (event.target == getMoneyModal) {
+        getMoneyModal.style.display = "none";
+        }
+        else if (event.target == earnMoneyModal) {
+        earnMoneyModal.style.display = "none";
+        }
+        }
+        </script>
 
     }
 </body>

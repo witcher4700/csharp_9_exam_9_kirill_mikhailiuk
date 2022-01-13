@@ -1,4 +1,6 @@
 ﻿@{ ViewData["Title"] = "Home Page"; }
+@using WebMoney.Utils;
+@using WebMoney.Enums;
 @model WebMoney.ViewModels.HistoryViewModel
 
 <html>
@@ -39,7 +41,7 @@
                     <td>@t.WalletFrom</td>
                     <td>@t.WalletTo</td>
                     <td>@t.MoneyCount</td>
-                    <td>@t.TransActionType</td>
+                    <td>@t.TransactionType.GetDescription()</td>
                     <td>@t.DateTime</td>
                 </tr>
             }
